@@ -1,36 +1,57 @@
 # Workshop Guide: Automated GraphQL Security Testing
 
-This repo contains course materials for a workshop that StackHawk launched in June of 2021. In it, we help walk you through scanning a simple GraphQL application in GitGub Actions (a CI/CD platform) with the HawkScan DAST scanner.
+This repo contains a guidebook for the StackHawk workshop, "Automated GraphQL Security Testing." In the workshop, we help walk you through scanning a simple GraphQL application in GitGub Actions (a CI/CD platform) with the HawkScan DAST scanner.
 
-If you missed the workshop and can't wait for the next one, watch the June '21 GraphQL workshop in the StackHawk YouTube channel (like and subscribe), and follow along with this copy/paste guidebook.
+While attending the workshop, you should use this guidebook as a reference for code samples and commands as they come up. It's not cheating to copy and paste!
 
+Not attending our workshop right now? Watch the [June '21 GraphQL workshop](https://www.youtube.com/watch?v=7SiYpZYDlEg) in the [StackHawk YouTube channel](https://www.youtube.com/c/StackHawk) on your own schedule. As our marketing department likes to say, "like and subscribe!"
 
+---
 ## Prerequisites
-Docker
-https://docs.docker.com/get-docker
 
-HawkScan
-docker pull stackhawk/hawkscan
+To get the most out of this workshop, make sure you have the following prerequisites before getting started.
 
-vuln-graphql-api (Fork This)
-https://github.com/kaakaww/vuln-graphql-api
+* Docker -- [install](https://docs.docker.com/get-docker)
+* HawkScan -- `docker pull stackhawk/hawkscan`
+* Discord 
+  * [Install](https://discord.com/) Discord
+  * [Join](https://discord.gg/gAqPJPva) the StackHawk Server
+  * Find us in the [#graphql-security-testing](https://discord.gg/vXbm3VmE) channel
+* The GitHub CLI (optional)
+  * [Install](https://github.com/cli/cli#installation)
+  * Login -- `gh auth login`
 
-Discord
-https://discord.com/
+## Step 1: Fork the Test Application
 
-## Ask Questions!
-Join us at https://discord.gg/9zT2Vy5m 
-Then find us in the #graphql-security-testing channel
-Fork the GraphQL Test App
-Fork it
-https://github.com/kaakaww/vuln-graphql-api 
+Fork the vuln-graphql-api app from the website.
 
-Clone it
-git clone .../vuln-graphql-api
+> https://github.com/kaakaww/vuln-graphql-api
 
-Prepare it for the workshop
+Or from the command line (optional).
+
+```shell
+gh repo fork kaakaww/vuln-graphql-api
+```
+
+Clone it to your workstaion.
+
+```shell
+# With the GitHub CLI (optional):
+gh repo clone vuln-graphql-api
+
+# Or with good old git:
+git clone <your-github-org>/vuln-graphql-api
+
+# Enter your cloned project directory
+cd vuln-graphql-api
+```
+
+Prepare the vuln-graphql-api project directory for the workshop
+```shell
 ./scripts/workshop-prep.sh
-Run the Test App
+```
+
+## Run the Test App
 Build and run
 export SERVER_PORT=3000
 docker compose up --build --detach
