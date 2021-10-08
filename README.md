@@ -1,10 +1,8 @@
-# Workshop Guide: Automated GraphQL Security Testing
+# Workshop Cheat Sheet: Automated GraphQL Security Testing
 
-This repo contains a guidebook for the StackHawk workshop, "Automated GraphQL Security Testing." In the workshop, we help walk you through scanning a simple GraphQL application in GitGub Actions (a CI/CD platform) with the HawkScan DAST scanner.
+This workshop shows you how to get started scanning a GraphQL application with StackHawk. You will also learn to automate scanning on every code push to GitHub using GitHub Actions.
 
-While attending the workshop, you should use this guidebook as a reference for code samples and commands as they come up. It's not cheating to copy and paste!
-
-Not attending our workshop right now? Watch the [June '21 GraphQL workshop](https://www.youtube.com/watch?v=7SiYpZYDlEg) in the [StackHawk YouTube channel](https://www.youtube.com/c/StackHawk) on your own schedule. As our marketing department likes to say, "like and subscribe!"
+Not attending our workshop right now? You can watch the [June '21 GraphQL workshop](https://www.youtube.com/watch?v=7SiYpZYDlEg) on your own schedule.
 
 ---
 
@@ -14,40 +12,47 @@ To get the most out of this workshop, make sure you have the following prerequis
 
 * Discord 
   * [Install](https://discord.com/) Discord
-  * [Join](https://discord.gg/gAqPJPva) the StackHawk Server
-  * Find us in the [#graphql-security-testing](https://discord.gg/vXbm3VmE) channel
+  * [Join](https://discord.gg/2XsFrkMVdc) the GitNation Server
+  * Find us in **#oct11-gql-security-testing** – it's under the 🧩RADV FREE WORKSHOPS category
 * Docker -- [install](https://docs.docker.com/get-docker) the latest version
-* HawkScan -- `docker pull stackhawk/hawkscan`
-* The GitHub CLI
-  * [Install](https://github.com/cli/cli#installation)
-  * Login -- `gh auth login`
+* HawkScan -- ```docker pull stackhawk/hawkscan```
+* The GitHub CLI (`gh`)
+  * [Install](https://github.com/cli/cli#installation) the CLI
+  * Login -- ```gh auth login```
 
 ## Step 1: Fork the Test Application
 
-Fork the vuln-graphql-api app.
+Fork the vuln-graphql-api app with the GitHub CLI:
 
 ```shell
-# From the website
-open https://github.com/kaakaww/vuln-graphql-api
-
-# Or with the GitHub CLI
 gh repo fork kaakaww/vuln-graphql-api
 ```
 
-Clone it to your workstaion.
+...or from the website:
 
 ```shell
-# With git:
-git clone <YOUR-GITHUB-ORG>/vuln-graphql-api
+open https://github.com/kaakaww/vuln-graphql-api
+```
 
-# Or with the GitHub CLI:
+Clone it to your workstaion with the GitHub CLI:
+
+```shell
 gh repo clone vuln-graphql-api
+```
 
-# Enter your cloned project directory
+...or with `git`:
+
+```shell
+git clone <YOUR-GITHUB-ORG>/vuln-graphql-api
+```
+
+Enter your cloned project directory:
+
+```shell
 cd vuln-graphql-api
 ```
 
-Prepare the vuln-graphql-api project directory for the workshop
+Prepare the vuln-graphql-api project directory for the workshop:
 
 ```shell
 ./scripts/workshop-prep.sh
@@ -55,7 +60,7 @@ Prepare the vuln-graphql-api project directory for the workshop
 
 ## Step 2: Run the Test App
 
-Build and run
+Build and run the test app:
 
 ```shell
 export SERVER_PORT=3000
@@ -76,11 +81,13 @@ Sign up for a StackHawk Developer Account
 open https://app.stackhawk.com
 ```
 
+Create an App, Environment, and API Key in the Getting Started flow.
+
 Scan vuln-graphql-api
 
 ```shell
 export SERVER_PORT=3000
-export API_KEY=hawk.XXXXXXXxXXXXXXXxxxxXXXXXxxxx
+export API_KEY=hawk.XXXxXXXXXXxXXXxXXxxX.XXXxXXXxXXxxXXXXxXXX
 docker run -t -e API_KEY -v $(pwd):/hawk --network host stackhawk/hawkscan
 ```
 
@@ -148,7 +155,7 @@ git push
 
 Congratulations!
 
-Now try it on *your* GraphQL application! Here are some additional resources to help you on your way.
+Now try it on *your* application! Here are some additional resources to help you on your way.
 
 * [HawkDocs](https://docs.stackhawk.com), where you can read all the details on how to configure and run HawkScan in your environment.
 * [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html), where you can find more details on tuning your GraphQL scan
