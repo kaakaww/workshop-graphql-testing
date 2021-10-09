@@ -40,7 +40,7 @@ gh repo clone vuln-graphql-api
 ...**or** clone it with `git`:
 
 ```shell
-git clone <YOUR-GITHUB-ORG>/vuln-graphql-api
+git clone git@github.com:<YOUR-GITHUB-ORG>/vuln-graphql-api
 ```
 
 Enter your cloned project directory:
@@ -79,9 +79,9 @@ Copy the intial HawkScan configuration file, `stackhawk.yml`, to the base of you
 ```yaml
 # ./stackhawk.yml
 app:
- applicationId: <YOUR-APP-ID>
- env: Development
- host: https://localhost:3000
+  applicationId: <YOUR-APP-ID>
+  env: Development
+  host: https://localhost:3000
 ```
 
 > ☝️ Replace `<YOUR-APP-ID>` with the App ID you created in the StackHawk platform.
@@ -102,7 +102,7 @@ Update your `stackhawk.yml` configuration file:
 ```yaml
 # ./stackhawk.yml
 app:
- applicationId: <YOUR-APP-ID>
+  applicationId: <YOUR-APP-ID>
   env: Development
   host: http://localhost:3000
   graphqlConf:
@@ -161,12 +161,16 @@ git commit -m "add HawkScan to the build workflow"
 git push
 ```
 
-## All Done
+Check your workflow in GitHub Actions, and your scan results on [StackHawk](https://app.stackhawk.com).
 
-Congratulations! You just automated DAST scanning in a build pipeline.
+## Workshop Complete
 
-Now try StackHawk on *your* application! Here are some additional resources to help you on your way.
+You just automated DAST GraphQL scanning in a build pipeline!
 
-* [HawkDocs](https://docs.stackhawk.com), where you can read all the details on how to configure and run HawkScan in your environment.
-* [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html), where you can find more details on tuning your GraphQL scan
-* [Continuous Integration](https://docs.stackhawk.com/continuous-integration/), where you can see our guides for integrating HawkScan with the most popular CI/CD systems
+Here are some additional resources for further tuning StackHawk for your applications.
+
+* [HawkDocs](https://docs.stackhawk.com) - StackHawk Documentation.
+* [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html) - Details on how to tune your GraphQL scan.
+* [Authenticated Scanning](https://docs.stackhawk.com/hawkscan/authenticated-scanning.html) - Guides for authenticating HawkScan to your application for deeper scans.
+* [Continuous Integration](https://docs.stackhawk.com/continuous-integration/) - Guides for integrating HawkScan with the most popular CI/CD systems.
+* [StackHawk Blog](https://www.stackhawk.com/blog) - Tips, tricks, and strategies to help you continuously test and secure your applications.
