@@ -1,6 +1,6 @@
-# Workshop Cheat Sheet: Automated GraphQL Security Testing
+# Workshop Guidebook: Automated GraphQL Security Testing
 
-This workshop shows you how to scan a GraphQL application with StackHawk. You also learn how to automate scanning on code push with GitHub Actions.
+This workshop shows you how to scan a GraphQL application with StackHawk, and automate that scan in GitHub Actions.
 
 You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/1OqDYWux-dAwmzfDx4DbfnnnGfIBJiwYIG88zTD5b8YM/edit?usp=sharing).
 
@@ -10,7 +10,7 @@ Not attending our workshop right now? [Watch it](https://www.youtube.com/watch?v
 
 ## Prerequisites
 
-To get the most out of this workshop, make sure you have the following prerequisites before getting started.
+To get the most out of this workshop, make sure you have the following prerequisites.
 
 * Discord - Find us in **#oct11-gql-security-testing** under the 🧩RADV FREE WORKSHOPS category
 * Docker -- [Get](https://docs.docker.com/get-docker) the latest version
@@ -27,7 +27,7 @@ Fork the `vuln-graphql-api` app with the GitHub CLI:
 gh repo fork kaakaww/vuln-graphql-api
 ```
 
-...**or** from the website:
+...**or**, fork it from the website:
 
 <https://github.com/kaakaww/vuln-graphql-api>
 
@@ -37,7 +37,7 @@ Then clone your fork to your workstation with the GitHub CLI:
 gh repo clone vuln-graphql-api
 ```
 
-...**or** with `git`:
+...**or** clone it with `git`:
 
 ```shell
 git clone <YOUR-GITHUB-ORG>/vuln-graphql-api
@@ -49,7 +49,7 @@ Enter your cloned project directory:
 cd vuln-graphql-api
 ```
 
-Prepare the vuln-graphql-api project directory for the workshop:
+Prepare the `vuln-graphql-api` project directory for the workshop:
 
 ```shell
 ./scripts/workshop-prep.sh
@@ -64,19 +64,15 @@ export SERVER_PORT=3000
 docker compose up --build --detach
 ```
 
-Browse to the test app
+Browse to the test app:
 
 ```shell
 open http://localhost:3000
 ```
 
-## Step 3: My First HawkScan
+## Step 3: Your First HawkScan
 
-Sign up for a StackHawk Developer Account. Create an API Key, App, Environment, and HawkScan initial configuration file in the Getting Started flow.
-
-```shell
-open https://app.stackhawk.com
-```
+[Sign up](https://app.stackhawk.com) for a StackHawk Developer Account. Create an API Key, App ID, Environment, and HawkScan initial configuration file in the Getting Started flow.
 
 Copy the intial HawkScan configuration file, `stackhawk.yml`, to the base of your project directory:
 
@@ -106,7 +102,7 @@ Update your `stackhawk.yml` configuration file:
 ```yaml
 # ./stackhawk.yml
 app:
- applicationId: ${APP_ID}
+ applicationId: <YOUR-APP-ID>
   env: Development
   host: http://localhost:3000
   graphqlConf:
@@ -119,10 +115,10 @@ hawk:
     base: false
 ```
 
-Scan again
+Scan again:
 
 ```shell
-docker run -t -e API_KEY -v $(pwd):/hawk --network host stackhawk/hawkscan
+docker run -t -e API_KEY -v $(pwd):/hawk --network host stackhawk/hawkscan:latest
 ```
 
 ## Step 5: Automate in GitHub Actions
@@ -157,19 +153,19 @@ jobs:
           apiKey: ${{ secrets.HAWK_API_KEY }}
 ```
 
-Commit. Push. Scan.
+Push your changes to GitHub:
 
 ```shell
 git add .
-git commit -m "bring the noise"
+git commit -m "add HawkScan to the build workflow"
 git push
 ```
 
 ## All Done
 
-Congratulations!
+Congratulations! You just automated DAST scanning in a build pipeline.
 
-Now try it on *your* application! Here are some additional resources to help you on your way.
+Now try StackHawk on *your* application! Here are some additional resources to help you on your way.
 
 * [HawkDocs](https://docs.stackhawk.com), where you can read all the details on how to configure and run HawkScan in your environment.
 * [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html), where you can find more details on tuning your GraphQL scan
