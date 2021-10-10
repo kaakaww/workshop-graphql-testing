@@ -15,29 +15,14 @@ To get the most out of this workshop, make sure you have the following prerequis
 * Discord - Find us in **#oct11-gql-security-testing** under the 🧩RADV FREE WORKSHOPS category
 * Docker -- [Get](https://docs.docker.com/get-docker) the latest version
 * HawkScan -- ```docker pull stackhawk/hawkscan```
-* The GitHub CLI (Optional)
-  * [Install](https://github.com/cli/cli#installation) the CLI
-  * Login -- ```gh auth login```
 
 ## Step 1: Fork the Test Application
 
-Fork the `vuln-graphql-api` app with the GitHub CLI:
-
-```shell
-gh repo fork kaakaww/vuln-graphql-api
-```
-
-...**or**, fork it from the website:
+Fork the `vuln-graphql-api` app:
 
 <https://github.com/kaakaww/vuln-graphql-api>
 
-Then clone your fork to your workstation with the GitHub CLI:
-
-```shell
-gh repo clone vuln-graphql-api
-```
-
-...**or** clone it with `git`:
+Then clone your fork to your workstation:
 
 ```shell
 git clone git@github.com:<YOUR-GITHUB-ORG>/vuln-graphql-api
@@ -123,11 +108,9 @@ docker run -t -e API_KEY -v $(pwd):/hawk --network host stackhawk/hawkscan:lates
 
 ## Step 5: Automate in GitHub Actions
 
-Add your StackHawk API key as a GitHub Secret:
+Add your StackHawk API key as a GitHub Secret. Go to your repository in GitHub, and under the **Settings** section, find **Secrets** in the left-hand pane.
 
-```shell
-gh secret set HAWK_API_KEY --repos="vuln-graphql-api"
-```
+Enter your StackHawk API key as a secret named `HAWK_API_KEY`.
 
 Create the workflow, `.github/workflows/hawkscan.yml`:
 
@@ -167,7 +150,7 @@ Check your workflow in GitHub Actions, and your scan results on [StackHawk](http
 
 You just automated DAST GraphQL scanning in a build pipeline!
 
-Here are some additional resources for further tuning StackHawk for your applications.
+Here are some additional resources for further tuning StackHawk for *your* applications.
 
 * [HawkDocs](https://docs.stackhawk.com) - StackHawk Documentation.
 * [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html) - Details on how to tune your GraphQL scan.
