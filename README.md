@@ -59,6 +59,8 @@ open http://localhost:3000
 
 [Sign up](https://app.stackhawk.com) for a StackHawk Developer Account. Create an API Key, App ID, Environment, and HawkScan initial configuration file in the Getting Started flow.
 
+Follow the guidance to save your StackHawk API key to `~/.hawk/hawk.rc`
+
 Copy the intial HawkScan configuration file, `stackhawk.yml`, to the base of your project directory:
 
 ```yaml
@@ -74,11 +76,9 @@ app:
 Scan `vuln-graphql-api`:
 
 ```shell
-export API_KEY=<YOUR-API-KEY>
-docker run -t -e API_KEY -v $(pwd):/hawk --network host stackhawk/hawkscan
+source ~/.hawk/hawk.rc
+docker run -e API_KEY=${HAWK_API_KEY} --rm -v $(pwd):/hawk:rw -it --network host stackhawk/hawkscan:latest
 ```
-
-> ☝️ Replace `<YOUR-API-KEY>` with the API key you created in the StackHawk platform.
 
 ## Step 4: Tune for GraphQL
 
@@ -92,7 +92,6 @@ app:
   host: http://localhost:3000
   graphqlConf:
     enabled: true
-    operation: QUERY
   autoPolicy: true
   autoInputVectors: true
 hawk:
@@ -103,7 +102,7 @@ hawk:
 Scan again:
 
 ```shell
-docker run -t -e API_KEY -v $(pwd):/hawk --network host stackhawk/hawkscan:latest
+docker run -t -e API_KEY=${HAWK_API_KEY} -v $(pwd):/hawk --network host stackhawk/hawkscan:latest
 ```
 
 ## Step 5: Automate in GitHub Actions
@@ -112,23 +111,23 @@ Add your StackHawk API key as a GitHub Secret. Go to your repository in GitHub, 
 
 Enter your StackHawk API key as a secret named `HAWK_API_KEY`.
 
-Create the workflow, `.github/workflows/hawkscan.yml`:
+Create the workflow, `.github/workflows/build-and-scan.yml`:
 
 ```yaml
-# .github/workflows/hawkscan.yml
-name: HawkScan
+# .github/workflows/build-and-scan.yml
+name: Build and Scan
 on:
   push:
 jobs:
   hawkscan:
-    name: HawkScan
+    name: Build and Scan
     runs-on: ubuntu-20.04
     steps:
       - name: Clone repo
         uses: actions/checkout@v2
       - name: Build and run vuln-graphql-api
-        run: >
-          SERVER_PORT=3000
+        run: |
+          export SERVER_PORT=3000
           docker-compose up --build --detach
       - name: Run HawkScan
         uses: stackhawk/hawkscan-action@v1.3.1
