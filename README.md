@@ -12,7 +12,7 @@ Not attending our workshop right now? [Watch it](https://www.youtube.com/watch?v
 
 To get the most out of this workshop, make sure you have the following prerequisites.
 
-* Discord - Find us in **#oct11-gql-security-testing** under the 🧩RADV FREE WORKSHOPS category
+* Discord - Find us in **#oct11-gql-security-testing** under the 🧩 RADV FREE WORKSHOPS category
 * Docker -- [Get](https://docs.docker.com/get-docker) the latest version
 * HawkScan -- ```docker pull stackhawk/hawkscan```
 
@@ -68,7 +68,7 @@ Copy the intial HawkScan configuration file, `stackhawk.yml`, to the base of you
 app:
   applicationId: <YOUR-APP-ID>
   env: Development
-  host: https://localhost:3000
+  host: http://localhost:3000
 ```
 
 > ☝️ Replace `<YOUR-APP-ID>` with the App ID you created in the StackHawk platform.
@@ -126,9 +126,7 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v2
       - name: Build and run vuln-graphql-api
-        run: |
-          export SERVER_PORT=3000
-          docker-compose up --build --detach
+        run: docker-compose up --build --detach
       - name: Run HawkScan
         uses: stackhawk/hawkscan-action@v1.3.1
         with:
