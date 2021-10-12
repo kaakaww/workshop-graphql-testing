@@ -45,15 +45,12 @@ Prepare the `vuln-graphql-api` project directory for the workshop:
 Build and run the test app:
 
 ```shell
-export SERVER_PORT=3000
 docker compose up --build --detach
 ```
 
 Browse to the test app:
 
-```shell
-open http://localhost:3000
-```
+<http://localhost:3000>
 
 ## Step 3: Your First HawkScan
 
