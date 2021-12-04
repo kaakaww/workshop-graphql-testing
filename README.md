@@ -1,10 +1,15 @@
-# Workshop Guidebook: Automated GraphQL Security Testing
+# Workshop Guidebook: Automated GraphQL Application Security Testing
 
-This workshop shows you how to scan a GraphQL application with StackHawk, and automate that scan in GitHub Actions.
+This workshop is designed to help you get started with GraphQL application security testing in GitHub Actions. Participants get hands-on experience with:
+
+* GitHub Actions workflows
+* Dependabot software composition analysis (SCA)
+* CodeQL static application security testing (SAST) scanning
+* StackHawk dynamic application security test (DAST) scanning
 
 You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/1OqDYWux-dAwmzfDx4DbfnnnGfIBJiwYIG88zTD5b8YM/edit?usp=sharing).
 
-Not attending our workshop right now? [Watch it](https://www.youtube.com/watch?v=7SiYpZYDlEg) on your own schedule.
+* Discord - (updated 12/3/2021 for the [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) conference) Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
 
 ---
 
@@ -12,142 +17,124 @@ Not attending our workshop right now? [Watch it](https://www.youtube.com/watch?v
 
 To get the most out of this workshop, make sure you have the following prerequisites.
 
-* Discord - Find us in **#oct11-gql-security-testing** under the 🧩 RADV FREE WORKSHOPS category
-* Docker -- [Get](https://docs.docker.com/get-docker) the latest version
-* HawkScan -- ```docker pull stackhawk/hawkscan```
+* A web browser
+* GitHub - [Sign up](https://github.com/signup) if you don't have an account
 
-## Step 1: Fork the Test Application
+## Step 1: Continuous Integration in GitHub Actions
+
+First, clone our test GraphQL application. We will build and test it in a GitHub Actions workflow automatically on every commit. Later, we will add various other automated security tests for it.
 
 Fork the `vuln-graphql-api` app:
 
 <https://github.com/kaakaww/vuln-graphql-api>
 
-Then clone your fork to your workstation:
-
-```shell
-git clone git@github.com:<YOUR-GITHUB-ORG>/vuln-graphql-api
-```
-
-Enter your cloned project directory:
-
-```shell
-cd vuln-graphql-api
-```
-
-Prepare the `vuln-graphql-api` project directory for the workshop:
-
-```shell
-./scripts/workshop-prep.sh
-```
-
-## Step 2: Run the Test App
-
-Build and run the test app:
-
-```shell
-docker compose up --build --detach
-```
-
-Browse to the test app:
-
-<http://localhost:3000>
-
-## Step 3: Your First HawkScan
-
-[Sign up](https://app.stackhawk.com) for a StackHawk Developer Account. Create an API Key, App ID, Environment, and HawkScan initial configuration file in the Getting Started flow.
-
-Follow the guidance to save your StackHawk API key to `~/.hawk/hawk.rc`
-
-Copy the intial HawkScan configuration file, `stackhawk.yml`, to the base of your project directory:
+Go to the **Code** section of your newly forked repository in GitHub. Create a new file using the **Add file --> Create new file** button. Name the file `.github/workflows/build-and-test.yml`, and add the following contents:
 
 ```yaml
-# ./stackhawk.yml
-app:
-  applicationId: <YOUR-APP-ID>
-  env: Development
-  host: http://localhost:3000
-```
-
-> ☝️ Replace `<YOUR-APP-ID>` with the App ID you created in the StackHawk platform.
-
-Scan `vuln-graphql-api`:
-
-```shell
-source ~/.hawk/hawk.rc
-docker run -e API_KEY=${HAWK_API_KEY} --rm -v $(pwd):/hawk:rw -it --network host stackhawk/hawkscan:latest
-```
-
-## Step 4: Tune for GraphQL
-
-Update your `stackhawk.yml` configuration file:
-
-```yaml
-# ./stackhawk.yml
-app:
-  applicationId: <YOUR-APP-ID>
-  env: Development
-  host: http://localhost:3000
-  graphqlConf:
-    enabled: true
-  autoPolicy: true
-  autoInputVectors: true
-hawk:
-  spider:
-    base: false
-```
-
-Scan again:
-
-```shell
-docker run -t -e API_KEY=${HAWK_API_KEY} -v $(pwd):/hawk --network host stackhawk/hawkscan:latest
-```
-
-## Step 5: Automate in GitHub Actions
-
-Add your StackHawk API key as a GitHub Secret. Go to your repository in GitHub, and under the **Settings** section, find **Secrets** in the left-hand pane.
-
-Enter your StackHawk API key as a secret named `HAWK_API_KEY`.
-
-Create the workflow, `.github/workflows/build-and-scan.yml`:
-
-```yaml
-# .github/workflows/build-and-scan.yml
-name: Build and Scan
+# .github/workflows/build-and-test.yml
+name: Build and Test
 on:
   push:
 jobs:
   hawkscan:
-    name: Build and Scan
+    name: Build and Test
     runs-on: ubuntu-20.04
     steps:
       - name: Clone repo
         uses: actions/checkout@v2
-      - name: Build and run vuln-graphql-api
-        run: docker-compose up --build --detach
-      - name: Run HawkScan
+      - name: Build the app
+        run: docker-compose build
+```
+
+Commit the change.
+
+Go to the **Actions** section of your repository, and you should see the new workflow running.
+
+## Step 2: Dependency Scanning with Dependabot
+
+Next, add Software Composition Analysis (SCA) to your GitHub repository to scan the GraphQL test application for known dependency vulnerabilities.
+
+Go to the **Settings** section of your repo, and find the **Security & analysis** section in the left pane. Enable the **Dependency graph**, **Dependabot alerts**, and **Dependabot security updates** features in this section. Dependabot is now configured.
+
+Go to the **Security** section of your GitHub repo, and click into the **Dependabot alerts** on the left pane. Examine some of the dependency alerts, and see if you can resolve them.
+
+## Step 3: Static Code Analysis with CodeQL
+
+Go to the **Security** section of your repo. Click on **Set up code scanning**. Find the **CodeQL Analysis** code scanning tool, and click **Set up this workflow**.
+
+Examine the GitHub Actions workflow, `.github/workflows/codeql-analysis.yml`, and commit it to the repo.
+
+Now go to the **Actions** section of your repo, and watch your new CodeQL workflow run.
+
+When CodeQL has finished, examine the results in the **Security** section under **Code scanning alerts** in the left pane.
+
+## Step 4: Dynamic App Scanning with StackHawk 🦅
+
+[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Follow the Get Started flow to:
+
+* Create your StackHawk API key
+* Create your first "application" in the StackHawk platform
+* Create a starter configuration file for HawkScan to scan your application.
+
+### Create and Save the API Key
+
+The first step in the getting started flow is to create your API key.
+
+Stash your StackHawk API key in GitHub Secrets. In your repo, navigate to the **Settings** section, and find **Secrets** in the left pane.
+
+Add a secret named `HAWK_API_KEY`, and add your StackHawk API key as the value.
+
+### Commit the `stackhawk.yml` Configuration File
+
+The next step is to create your first application in the StackHawk platform. When you create a new app, StackHawk helps you generate a `stackhawk.yml` configuration file that is tuned to the kind of application you want to scan.
+
+In this step, take care to specify that your app is a GraphQL app, and it has an introspection endpoint at the default `/graphql` path.
+
+Download the `stackhawk.yml` file that you generate in this step. Copy the contents into a new file at the base of your repo named `stackhawk.yml`. Commit the file.
+
+### Add a StackHawk Scan to your Build and Test Workflow
+
+Update your Build and Test workflow. Add a step to start the `vuln-graphql-api` service, and a step to run HawkScan using the StackHawk Action at the end:
+
+```yaml
+# .github/workflows/build-and-test.yml
+name: Build and Test
+on:
+  push:
+jobs:
+  hawkscan:
+    name: Build and Test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+      - name: Build the app
+        run: docker-compose build
+      - name: Run the app
+        run: docker-compose up --detach
+      - name: Scan the app
         uses: stackhawk/hawkscan-action@v1.3.1
         with:
           apiKey: ${{ secrets.HAWK_API_KEY }}
 ```
 
-Push your changes to GitHub:
+Commit this change.
 
-```shell
-git add .
-git commit -m "add HawkScan to the build workflow"
-git push
-```
+### Check your Scan Results
 
-Check your workflow in GitHub Actions, and your scan results on [StackHawk](https://app.stackhawk.com).
+Go to the **Actions** section of your repo, and watch your updated Build and Test workflow run. Examine the **Run HawkScan** job step logs.
 
-## Workshop Complete
+[Check your scan results](https://app.stackhawk.com/scans) on the StackHawk platform.
 
-You just automated DAST GraphQL scanning in a build pipeline!
+## WORKSHOP COMPLETE
 
-Here are some additional resources for further tuning StackHawk for *your* applications.
+You just automated SCA, SAST, and DAST scanning of a GraphQL application with GitHub Actions!
 
-* [HawkDocs](https://docs.stackhawk.com) - StackHawk Documentation.
+Read more about [GitHub Actions](https://docs.github.com/en/actions), [CodeQL](https://codeql.github.com/docs/), and [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates). And check out the [GitHub Actions Marketplace](https://github.com/marketplace?type=actions), where you can find other Actions to build out your pipeline.
+
+Go deeper with HawkScan to tune it for your application.
+
 * [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html) - Details on how to tune your GraphQL scan.
 * [Authenticated Scanning](https://docs.stackhawk.com/hawkscan/authenticated-scanning.html) - Guides for authenticating HawkScan to your application for deeper scans.
-* [Continuous Integration](https://docs.stackhawk.com/continuous-integration/) - Guides for integrating HawkScan with the most popular CI/CD systems.
-* [StackHawk Blog](https://www.stackhawk.com/blog) - Tips, tricks, and strategies to help you continuously test and secure your applications.
+* [Continuous Integration](https://docs.stackhawk.com/continuous-integration/), where you can see our guides for integrating HawkScan with the most popular CI/CD systems.
+* [StackHawk Blog](https://www.stackhawk.com/blog), with technical tips, tricks, and walkthroughs to help you secure and test your applications.
