@@ -9,7 +9,7 @@ This workshop is designed to help you get started with GraphQL application secur
 
 You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/1OqDYWux-dAwmzfDx4DbfnnnGfIBJiwYIG88zTD5b8YM/edit?usp=sharing).
 
-* Discord - (updated 12/3/2021 for the [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) conference) Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
+If you are attending the December 2021 [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) live workshop, [join us on Discord](https://discord.gg/ekrCgSTR93). Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
 
 ---
 
@@ -92,6 +92,24 @@ In this step, take care to specify that your app is a GraphQL app, and it has an
 
 Download the `stackhawk.yml` file that you generate in this step. Copy the contents into a new file at the base of your repo named `stackhawk.yml`. Commit the file.
 
+Your configuration file should look similar to this, but with your own unique App ID.
+
+```yaml
+# ./stackhawk.yml
+app:
+ applicationId: <YOUR-APP-ID>
+  env: Development
+  host: http://localhost:3000
+  graphqlConf:
+    enabled: true
+  autoPolicy: true
+  autoInputVectors: true
+
+hawk:
+  spider:
+    base: false
+```
+
 ### Add a StackHawk Scan to your Build and Test Workflow
 
 Update your Build and Test workflow. Add a step to start the `vuln-graphql-api` service, and a step to run HawkScan using the StackHawk Action at the end:
@@ -113,7 +131,7 @@ jobs:
       - name: Run the app
         run: docker-compose up --detach
       - name: Scan the app
-        uses: stackhawk/hawkscan-action@v1.3.1
+        uses: stackhawk/hawkscan-action@v1.3.2
         with:
           apiKey: ${{ secrets.HAWK_API_KEY }}
 ```
@@ -128,11 +146,11 @@ Go to the **Actions** section of your repo, and watch your updated Build and Tes
 
 ## WORKSHOP COMPLETE
 
-You just automated SCA, SAST, and DAST scanning of a GraphQL application with GitHub Actions!
+You just automated SCA, SAST, and DAST scanning of a GraphQL application!
 
 Read more about [GitHub Actions](https://docs.github.com/en/actions), [CodeQL](https://codeql.github.com/docs/), and [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates). And check out the [GitHub Actions Marketplace](https://github.com/marketplace?type=actions), where you can find other Actions to build out your pipeline.
 
-Go deeper with HawkScan to tune it for your application.
+Go deeper with HawkScan to tune it for *your* application.
 
 * [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html) - Details on how to tune your GraphQL scan.
 * [Authenticated Scanning](https://docs.stackhawk.com/hawkscan/authenticated-scanning.html) - Guides for authenticating HawkScan to your application for deeper scans.
