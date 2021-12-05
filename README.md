@@ -9,7 +9,7 @@ This workshop is designed to help you get started with GraphQL application secur
 
 You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/1OqDYWux-dAwmzfDx4DbfnnnGfIBJiwYIG88zTD5b8YM/edit?usp=sharing).
 
-If you are attending the December 2021 [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) live workshop, [join us on Discord](https://discord.gg/ekrCgSTR93). Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
+> If you are attending the December 2021 [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) live workshop, [join us on Discord](https://discord.gg/ekrCgSTR93). Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
 
 ---
 
@@ -20,15 +20,24 @@ To get the most out of this workshop, make sure you have the following prerequis
 * A web browser
 * GitHub - [Sign up](https://github.com/signup) if you don't have an account
 
+## Agenda
+
+In this workshop we will work through the following tasks:
+
+1. Fork a test GraphQL app, and set up a CI/CD workflow for it in GitHub Actions.
+2. Enable Software Composition Analysis (SCA) scanning with Dependabot.
+3. Enable Static Application Security Test (SAST) scanning with CodeQL.
+4. Enable Dynamic Application Securituy Test (DAST) scanning with StackHawk.
+
 ## Step 1: Continuous Integration in GitHub Actions
 
-First, clone our test GraphQL application. We will build and test it in a GitHub Actions workflow automatically on every commit. Later, we will add various other automated security tests for it.
+First, fork the test GraphQL application repository, [`vuln-graphql-api`](https://github.com/kaakaww/vuln-graphql-api). We will build and test it in a GitHub Actions workflow on every commit.
 
-Fork the `vuln-graphql-api` app:
+Fork the `vuln-graphql-api` app from GitHub using the "Fork" button at the top right side of the page:
 
 <https://github.com/kaakaww/vuln-graphql-api>
 
-Go to the **Code** section of your newly forked repository in GitHub. Create a new file using the **Add file --> Create new file** button. Name the file `.github/workflows/build-and-test.yml`, and add the following contents:
+After forking, go to the **Code** section of your new forked repository in GitHub. Create a new file using the **Add file --> Create new file** button. Name the file `.github/workflows/build-and-test.yml`, and add the following contents:
 
 ```yaml
 # .github/workflows/build-and-test.yml
@@ -54,7 +63,7 @@ Go to the **Actions** section of your repository, and you should see the new wor
 
 Next, add Software Composition Analysis (SCA) to your GitHub repository to scan the GraphQL test application for known dependency vulnerabilities.
 
-Go to the **Settings** section of your repo, and find the **Security & analysis** section in the left pane. Enable the **Dependency graph**, **Dependabot alerts**, and **Dependabot security updates** features in this section. Dependabot is now configured.
+Go to the **Security** section in your repo. Click **Enable Dependabot alerts**. Enable the **Dependency graph**, **Dependabot alerts**, and **Dependabot security updates** features in this section. Dependabot is now configured.
 
 Go to the **Security** section of your GitHub repo, and click into the **Dependabot alerts** on the left pane. Examine some of the dependency alerts, and see if you can resolve them.
 
@@ -70,13 +79,13 @@ When CodeQL has finished, examine the results in the **Security** section under 
 
 ## Step 4: Dynamic App Scanning with StackHawk 🦅
 
-[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Follow the Get Started flow to:
+[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Choose the Free developer account, and then "Scan My Application." Follow the Get Started flow to:
 
 * Create your StackHawk API key
 * Create your first "application" in the StackHawk platform
 * Create a starter configuration file for HawkScan to scan your application.
 
-### Create and Save the API Key
+### Create and Save an API Key
 
 The first step in the getting started flow is to create your API key.
 
@@ -84,11 +93,11 @@ Stash your StackHawk API key in GitHub Secrets. In your repo, navigate to the **
 
 Add a secret named `HAWK_API_KEY`, and add your StackHawk API key as the value.
 
-### Commit the `stackhawk.yml` Configuration File
+### Create an Application and Configuration
 
 The next step is to create your first application in the StackHawk platform. When you create a new app, StackHawk helps you generate a `stackhawk.yml` configuration file that is tuned to the kind of application you want to scan.
 
-In this step, take care to specify that your app is a GraphQL app, and it has an introspection endpoint at the default `/graphql` path.
+In this step, take care to specify that your Application Type is a GraphQL API, and it has an introspection endpoint at the default `/graphql` path.
 
 Download the `stackhawk.yml` file that you generate in this step. Copy the contents into a new file at the base of your repo named `stackhawk.yml`. Commit the file.
 
@@ -96,18 +105,21 @@ Your configuration file should look similar to this, but with your own unique Ap
 
 ```yaml
 # ./stackhawk.yml
+# -- stackhawk configuration for vuln-graphql-api --
 app:
- applicationId: <YOUR-APP-ID>
-  env: Development
-  host: http://localhost:3000
+  # -- An applicationId obtained from the StackHawk platform. --
+  applicationId: <YOUR_APP_ID> # (required)
+  env: Development # (required)
+  host: http://localhost:3000 # (required)
+
+  # -- Customized Configuration for GraphQL/SOAP/OpenAPI, add here --
   graphqlConf:
     enabled: true
+    schemaPath: /graphql # OR...
+    operation: ALL # Types: ALL, QUERY, MUTATION
+    requestMethod: POST # Types: POST, GET
   autoPolicy: true
   autoInputVectors: true
-
-hawk:
-  spider:
-    base: false
 ```
 
 ### Add a StackHawk Scan to your Build and Test Workflow
