@@ -9,7 +9,7 @@ This workshop is designed to help you get started with GraphQL application secur
 
 You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/1OqDYWux-dAwmzfDx4DbfnnnGfIBJiwYIG88zTD5b8YM/edit?usp=sharing).
 
-> If you are attending the December 2021 [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) live workshop, [join us on Discord](https://discord.gg/ekrCgSTR93). Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
+> If you are attending the December 2021 [GraphQL Galaxy](https://graphqlgalaxy.com/workshops-3h) live workshop, [join us on Discord](https://discord.gg/Mu8y3GWjbG). Find us in **#dec6-security-testing-stackhawk** under the **🚀GQL WORKSHOPS** category in the GitNation Tech Communities Discord.
 
 ---
 
