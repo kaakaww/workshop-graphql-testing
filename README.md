@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build the app
         run: docker-compose build
 ```
@@ -77,7 +77,7 @@ When CodeQL has finished, examine the results in the **Security** section under 
 
 ## Step 4: Dynamic App Scanning with StackHawk 🦅
 
-[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Choose the Free developer account, and then "Scan My Application." Follow the Get Started flow to:
+[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Choose the Free Trial account, and then "Scan My Application." Follow the Get Started flow to:
 
 * Create your StackHawk API key
 * Create your first "application" in the StackHawk platform
@@ -118,6 +118,10 @@ app:
     requestMethod: POST # Types: POST, GET
   autoPolicy: true
   autoInputVectors: true
+
+# BONUS: Fail the scan if we find issues of HIGH criticality
+hawk:
+  failureThreshold: high
 ```
 
 ### Add a StackHawk Scan to your Build and Test Workflow
@@ -135,13 +139,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build the app
         run: docker-compose build
       - name: Run the app
         run: docker-compose up --detach
       - name: Scan the app
-        uses: stackhawk/hawkscan-action@v1.3.2
+        uses: stackhawk/hawkscan-action@v2.0.0
         with:
           apiKey: ${{ secrets.HAWK_API_KEY }}
 ```
