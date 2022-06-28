@@ -168,5 +168,5 @@ Go deeper with HawkScan to tune it for *your* application.
 
 * [GraphQL Configuration](https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration.html) - Details on how to tune your GraphQL scan.
 * [Authenticated Scanning](https://docs.stackhawk.com/hawkscan/authenticated-scanning.html) - Guides for authenticating HawkScan to your application for deeper scans.
-* [Continuous Integration](https://docs.stackhawk.com/continuous-integration/), where you can see our guides for integrating HawkScan with the most popular CI/CD systems.
-* [StackHawk Blog](https://www.stackhawk.com/blog), with technical tips, tricks, and walkthroughs to help you secure and test your applications.
+* [Continuous Integration](https://docs.stackhawk.com/continuous-integration/) - Guides for integrating HawkScan with the most popular CI/CD systems.
+* [StackHawk Blog](https://www.stackhawk.com/blog) - Technical tips, tricks, and walkthroughs to help you secure and test your applications.
