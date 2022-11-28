@@ -1,6 +1,6 @@
 # Workshop Guidebook: Automated GraphQL Application Security Testing
 
-This workshop is designed to help you get started with automated GraphQL application security testing using GitHub Actions. Participants get hands-on experience with:
+This workshop is designed to help you get started with automated GraphQL application security testing in GitHub Actions. Participants get hands-on experience with:
 
 * GitHub Actions workflows
 * Dependabot software composition analysis (SCA)
@@ -22,20 +22,21 @@ To get the most out of this workshop, make sure you have the following prerequis
 
 In this workshop we will work through the following tasks:
 
-1. Fork a test GraphQL app, and set up a CI/CD workflow for it in GitHub Actions.
-2. Enable Software Composition Analysis (SCA) scanning with Dependabot.
-3. Enable Static Application Security Test (SAST) scanning with CodeQL.
-4. Enable Dynamic Application Securituy Test (DAST) scanning with StackHawk.
+1. Fork a test GraphQL repo and set up a CI/CD workflow for it in GitHub Actions.
+2. Then for the newly forked repo, we will:
+   1. Enable Software Composition Analysis (SCA) using Dependabot
+   2. Enable Static Application Security Test (SAST) scanning using CodeQL
+   3. Enable Dynamic Application Security Test (DAST) scanning using StackHawk
 
 ## Step 1: Continuous Integration in GitHub Actions
 
-First, fork the test GraphQL application repository, [`vuln-graphql-api`](https://github.com/kaakaww/vuln-graphql-api). We will build and test it in a GitHub Actions workflow on every commit.
+First, fork the test GraphQL application repository, [`vuln-graphql-api`](https://github.com/kaakaww/vuln-graphql-api).  Then we will build and test it using a GitHub Actions workflow on every commit.
 
-Fork the `vuln-graphql-api` app from GitHub using the "Fork" button at the top right side of the page:
+1. Fork the `vuln-graphql-api` app from GitHub using the "Fork" button at the top right side of the page:
 
 <https://github.com/kaakaww/vuln-graphql-api>
 
-After forking, go to the **Code** section of your new forked repository in GitHub. Create a new file using the **Add file --> Create new file** button. Name the file `.github/workflows/build-and-test.yml`, and add the following contents:
+2. After forking, go to the **Code** section of your new forked repository in GitHub. Create a new file using the **Add file --> Create new file** button. Name the file `.github/workflows/build-and-test.yml`, and add the following contents:
 
 ```yaml
 # .github/workflows/build-and-test.yml
@@ -63,7 +64,7 @@ Next, add Software Composition Analysis (SCA) to your GitHub repository to scan 
 
 Go to the **Settings --> Code security and analysis** section in your repo. Enable the **Dependency graph**, **Dependabot alerts**, and **Dependabot security updates** features in this section. Dependabot is now configured.
 
-Go to the **Security --> Dependabot** section of your GitHub repo, and click into the **Dependabot alerts** on the left pane. Examine some dependency alerts, and see if you can resolve them.
+Go to the **Security --> Dependabot** section of your GitHub repo, and click into the **Dependabot alerts** on the left pane. View the dependency alerts, and see if you want to resolve them.
 
 ## Step 3: Static Code Analysis with CodeQL
 
@@ -73,7 +74,7 @@ This will add a file to your repo.  Examine the GitHub Actions workflow, `.githu
 
 Now go to the **Actions --> CodeQL** section of your repo, and watch your new CodeQL workflow run.
 
-When CodeQL has finished, examine the results in the **Security** section under **Code scanning alerts** in the left pane.
+When CodeQL has finished, view the results in the **Security** section under **Code scanning alerts** in the left pane.
 
 ## Step 4: Dynamic App Scanning with StackHawk 🦅
 
