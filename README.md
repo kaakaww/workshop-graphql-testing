@@ -1,13 +1,13 @@
 # Workshop Guidebook: Automated GraphQL Application Security Testing
 
-This workshop is designed to help you get started with GraphQL application security testing in GitHub Actions. Participants get hands-on experience with:
+This workshop is designed to help you get started with automated GraphQL application security testing using GitHub Actions. Participants get hands-on experience with:
 
 * GitHub Actions workflows
 * Dependabot software composition analysis (SCA)
 * CodeQL static application security testing (SAST) scanning
 * StackHawk dynamic application security test (DAST) scanning
 
-You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/1OqDYWux-dAwmzfDx4DbfnnnGfIBJiwYIG88zTD5b8YM/edit?usp=sharing).
+You can find the slide deck for this workshop [here](https://docs.google.com/presentation/d/13EageIyLyV2ad_g8y7t3gGNOJE3SlMrbRaQ1hh6V51w/edit?usp=sharing)
 
 ---
 
@@ -17,7 +17,6 @@ To get the most out of this workshop, make sure you have the following prerequis
 
 * A web browser
 * GitHub account - [Sign up](https://github.com/signup) if you don't have one
-* Docker
 
 ## Agenda
 
