@@ -16,7 +16,8 @@ You can find the slide deck for this workshop [here](https://docs.google.com/pre
 To get the most out of this workshop, make sure you have the following prerequisites.
 
 * A web browser
-* GitHub - [Sign up](https://github.com/signup) if you don't have an account
+* GitHub account - [Sign up](https://github.com/signup) if you don't have one
+* Docker
 
 ## Agenda
 
@@ -55,47 +56,71 @@ jobs:
 
 Commit the change.
 
-Go to the **Actions** section of your repository, and you should see the new workflow running.
+Go to the **Actions --> All Workflows** section of your repository, and you should see the new workflow running.
 
 ## Step 2: Dependency Scanning with Dependabot
 
 Next, add Software Composition Analysis (SCA) to your GitHub repository to scan the GraphQL test application for known dependency vulnerabilities.
 
-Go to the **Security** section in your repo. Click **Enable Dependabot alerts**. Enable the **Dependency graph**, **Dependabot alerts**, and **Dependabot security updates** features in this section. Dependabot is now configured.
+Go to the **Settings --> Code security and analysis** section in your repo. Enable the **Dependency graph**, **Dependabot alerts**, and **Dependabot security updates** features in this section. Dependabot is now configured.
 
-Go to the **Security** section of your GitHub repo, and click into the **Dependabot alerts** on the left pane. Examine some of the dependency alerts, and see if you can resolve them.
+Go to the **Security --> Dependabot** section of your GitHub repo, and click into the **Dependabot alerts** on the left pane. Examine some dependency alerts, and see if you can resolve them.
 
 ## Step 3: Static Code Analysis with CodeQL
 
-Go to the **Security** section of your repo. Click on **Set up code scanning**. Find the **CodeQL Analysis** code scanning tool, and click **Set up this workflow**.
+Go to the **Security --> Code Scanning** section of your repo. Click on **Configure scanning tool**. Find the **CodeQL Analysis** code scanning tool in the "Security" workflow list, and click **Configure**.
 
-Examine the GitHub Actions workflow, `.github/workflows/codeql-analysis.yml`, and commit it to the repo.
+This will add a file to your repo.  Examine the GitHub Actions workflow, `.github/workflows/codeql-analysis.yml`, and commit it to the repo.
 
-Now go to the **Actions** section of your repo, and watch your new CodeQL workflow run.
+Now go to the **Actions --> CodeQL** section of your repo, and watch your new CodeQL workflow run.
 
 When CodeQL has finished, examine the results in the **Security** section under **Code scanning alerts** in the left pane.
 
 ## Step 4: Dynamic App Scanning with StackHawk 🦅
 
-[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Choose the Free Trial account, and then "Scan My Application." Follow the Get Started flow to:
+[Sign up](https://app.stackhawk.com) for a StackHawk Developer account. Click on the "Confirm Your Email Address" link in the email invite and choose "Scan My Application."
 
-* Create your StackHawk API key
-* Create your first "application" in the StackHawk platform
-* Create a starter configuration file for HawkScan to scan your application.
+Follow the Get Started flow:
 
-### Create and Save an API Key
+* In the "Scanner Setup" step
+  * Select "StackHawk Docker Image" as the Scanner Type
+  * Copy the API Key from StackHawk and put it in GitHub Secrets
+    * In GitHub, go to **Settings --> Secrets --> Actions**
+    * Click on "New repository secret"
+    * Make the name `HAWK_API_KEY` and paste the StackHawk API Key as the secret
+* Next step, create your first Application in the StackHawk platform
+  * The Application name can be whatever you want
+  * Pick the Environment 
+  * For the Host URL, put `http://localhost:3000`
+* After that, set the App Type
+  * "Application Type" to `API`
+  * "API Type" to `GraphQL`
+  * "GraphQL Introspection Point" to `/graphql`
+* Last step shows you an example `stackhawk.yml` file
+  * Copy and paste that into a new file at the root of your new repo called `stackhawk.yml`
+   
+At this point, you have a StackHawk account with an API Key and Application all set up to receive scans!
 
-The first step in the getting started flow is to create your API key.
+#### Optional: Create and Save an API Key
 
-Stash your StackHawk API key in GitHub Secrets. In your repo, navigate to the **Settings** section, and find **Secrets** in the left pane.
+If you didn't get the StackHawk API Key during the Getting Started flow, you can do so now.
 
-Add a secret named `HAWK_API_KEY`, and add your StackHawk API key as the value.
+In StackHawk, click on your name/icon on the left menu, and click **Settings --> API Keys**.  Then click the "Create New Api Key", give it a name, and copy the shown key so it can be pasted into a GitHub Secret.
 
-### Create an Application and Configuration
+* Copy the API Key from StackHawk and put it in GitHub Secrets
+    * In GitHub, go to **Settings --> Secrets --> Actions**
+    * Click on "New repository secret"
+    * Make the name `HAWK_API_KEY` and paste the StackHawk API Key as the secret
 
-The next step is to create your first application in the StackHawk platform. When you create a new app, StackHawk helps you generate a `stackhawk.yml` configuration file that is tuned to the kind of application you want to scan.
+### Optional: Create an Application and Configuration
 
-In this step, take care to specify that your Application Type is a GraphQL API, and it has an introspection endpoint at the default `/graphql` path.
+If you want, you can create a different application in the StackHawk platform. When you create a new app, StackHawk helps you generate a `stackhawk.yml` configuration file that is tuned to the kind of application you want to scan.
+
+In this step, take care to specify that
+  * The "Host" is `http://localhost:3000`
+  * The "Application Type" is `API`
+  * The "API Type" is `GraphQL`
+  * The URL Path is `/graphql`
 
 Download the `stackhawk.yml` file that you generate in this step. Copy the contents into a new file at the base of your repo named `stackhawk.yml`. Commit the file.
 
@@ -126,7 +151,11 @@ hawk:
 
 ### Add a StackHawk Scan to your Build and Test Workflow
 
-Update your Build and Test workflow. Add a step to start the `vuln-graphql-api` service, and a step to run HawkScan using the StackHawk Action at the end:
+Update your Build and Test workflow by editing `blob/main/.github/workflows/build-and-test.yml`.  Go to this file in GitHub and click the "pencil" icon to edit directly.
+
+Add two steps:
+  * One to start the `vuln-graphql-api` service
+  * Another to run HawkScan using the StackHawk Action at the end
 
 ```yaml
 # .github/workflows/build-and-test.yml
@@ -144,7 +173,7 @@ jobs:
         run: docker-compose build
       - name: Run the app
         run: docker-compose up --detach
-      - name: Scan the app
+      - name: HawkScan
         uses: stackhawk/hawkscan-action@v2.0.0
         with:
           apiKey: ${{ secrets.HAWK_API_KEY }}
@@ -154,7 +183,7 @@ Commit this change.
 
 ### Check your Scan Results
 
-Go to the **Actions** section of your repo, and watch your updated Build and Test workflow run. Examine the **Run HawkScan** job step logs.
+Go to the **Actions** section of your repo, and watch your updated "Build and Test" workflow run. Examine the **HawkScan** job step logs.
 
 [Check your scan results](https://app.stackhawk.com/scans) on the StackHawk platform.
 
